@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Menu, type: :model do
-  let (:menu) { create(:menu) }
+  let(:menu) { create(:menu) }
 
   describe 'when create successfully a new Menu' do
     it 'should be an instance of Menu' do
@@ -33,7 +35,7 @@ RSpec.describe Menu, type: :model do
   end
 
   describe 'when update an existing menu' do
-    let (:another_menu) { create(:menu, name: 'Brunch') }
+    let(:another_menu) { create(:menu, name: 'Brunch') }
 
     context 'with valid attributes' do
       it 'should succeeds with no side effects' do
@@ -46,9 +48,9 @@ RSpec.describe Menu, type: :model do
 
     context 'with invalid attributes' do
       it 'should be not valid with an empty #name' do
-        menu.update(name: nil )
+        menu.update(name: nil)
         menu.valid?
-        expect(menu.errors[:name].size).to eq(1 )
+        expect(menu.errors[:name].size).to eq(1)
       end
 
       it 'should be not valid with an existing #name' do

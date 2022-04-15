@@ -1,0 +1,13 @@
+AllCops:
+  Exclude:
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - 'config/**/*'
+    - 'test/**/*'
+    - 'bin/*'
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/BlockLength:
+  IgnoredMethods: ['describe', 'context']
