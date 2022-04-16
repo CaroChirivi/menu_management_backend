@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'faker'
 
 RSpec.describe MenuItem, type: :model do
-  let (:menu_item) { create(:menu_item) }
+  let(:menu_item) { create(:menu_item) }
 
   describe 'when create successfully a new MenuItem' do
     it 'should be an instance of MenuItem' do
@@ -20,13 +22,13 @@ RSpec.describe MenuItem, type: :model do
 
   describe 'when validate attributes' do
     context '#menu' do
-      it "is required" do
+      it 'is required' do
         menu_item.menu = nil
         menu_item.valid?
         expect(menu_item.errors[:menu].size).to eq(1)
       end
 
-      it "is an instance of Menu" do
+      it 'is an instance of Menu' do
         expect(menu_item.menu).to be_an Menu
       end
     end
@@ -79,7 +81,7 @@ RSpec.describe MenuItem, type: :model do
       end
 
       it 'is less than 10000' do
-        menu_item.price = Faker::Number.number(digits = 5)
+        menu_item.price = Faker::Number.number(5)
         menu_item.valid?
         expect(menu_item.errors[:price].size).to eq(1)
       end
@@ -129,7 +131,7 @@ RSpec.describe MenuItem, type: :model do
           expect(menu_item.errors[:description].size).to eq(1)
         end
 
-        it "exceed maximum length" do
+        it 'exceed maximum length' do
           menu_item.update(description: Faker::Lorem.characters(510))
           menu_item.valid?
           expect(menu_item.errors[:description].size).to eq(1)
@@ -156,7 +158,7 @@ RSpec.describe MenuItem, type: :model do
         end
 
         it 'is not less than 10000' do
-          menu_item.update(price: Faker::Number.number(digits = 5))
+          menu_item.update(price: Faker::Number.number(5))
           menu_item.valid?
           expect(menu_item.errors[:price].size).to eq(1)
         end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'faker'
 
 RSpec.describe Menu, type: :model do
   let(:menu) { create(:menu) }
@@ -22,41 +23,57 @@ RSpec.describe Menu, type: :model do
   describe 'when validate attributes' do
     let(:another_menu) { build(:menu, name: menu.name) }
 
-    it 'should require #name' do
-      menu.name = nil
-      menu.valid?
-      expect(menu.errors[:name].size).to eq(1)
-    end
+    context '#name' do
+      it 'is required' do
+        menu.name = nil
+        menu.valid?
+        expect(menu.errors[:name].size).to eq(1)
+      end
 
-    it 'should verify uniqueness of #name' do
-      another_menu.valid?
-      expect(another_menu.errors['name'].size).to eq(1)
+      it 'is unique' do
+        another_menu.valid?
+        expect(another_menu.errors['name'].size).to eq(1)
+      end
+
+      it 'maximum length' do
+        menu.name = Faker::Lorem.characters(110)
+        menu.valid?
+        expect(menu.errors[:name].size).to eq(1)
+      end
     end
   end
 
   describe 'when update an existing menu' do
-    let(:another_menu) { create(:menu, name: 'Brunch') }
+    let(:another_menu) { create(:menu, name: Faker::Name.unique.name) }
 
-    context 'with valid attributes' do
+    describe 'with valid attributes' do
       it 'should succeeds with no side effects' do
-        name = 'Brunch'
+        name = Faker::Name.unique.name
         menu.update(name: name)
         menu.valid?
         expect(Menu.find_by_name(name)).to eq(menu)
       end
     end
 
-    context 'with invalid attributes' do
-      it 'should be not valid with an empty #name' do
-        menu.update(name: nil)
-        menu.valid?
-        expect(menu.errors[:name].size).to eq(1)
-      end
+    describe 'with invalid attributes' do
+      context '#name' do
+        it 'return error if is empty' do
+          menu.update(name: nil)
+          menu.valid?
+          expect(menu.errors[:name].size).to eq(1)
+        end
 
-      it 'should be not valid with an existing #name' do
-        menu.update(name: another_menu.name)
-        menu.valid?
-        expect(menu.errors[:name].size).to eq(1)
+        it 'return error if the name already exists' do
+          menu.update(name: another_menu.name)
+          menu.valid?
+          expect(menu.errors[:name].size).to eq(1)
+        end
+
+        it 'return error if exceed maximum length' do
+          menu.update(name: Faker::Lorem.characters(110))
+          menu.valid?
+          expect(menu.errors[:name].size).to eq(1)
+        end
       end
     end
   end
@@ -73,6 +90,14 @@ RSpec.describe Menu, type: :model do
       name = menu.name
       menu.destroy
       expect(Menu.find_by_name(name)).to be_nil
+    end
+  end
+
+  describe 'when have menu_items' do
+    it 'return the referenced menu_items' do
+      FactoryBot.create(:menu_item, menu: menu)
+      FactoryBot.create(:menu_item, menu: menu)
+      expect(menu.menu_items.size).to eq(2)
     end
   end
 end
