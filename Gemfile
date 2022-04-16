@@ -39,6 +39,8 @@ group :development, :test do
   gem 'rspec-rails', '~> 6.0.0.rc1'
   # Rubocop as a linter
   gem 'rubocop', require: false
+  # Faker generator
+  gem 'faker', require: false
 end
 
 group :development do
