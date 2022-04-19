@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_220_419_155_129) do
+ActiveRecord::Schema.define(version: 20_220_419_165_556) do
   create_table 'menu_items', force: :cascade do |t|
     t.integer 'menu_id'
     t.string 'name', limit: 100, null: false
@@ -27,7 +27,8 @@ ActiveRecord::Schema.define(version: 20_220_419_155_129) do
     t.string 'name', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
-    t.integer 'restaurant_id'
+    t.integer 'restaurant_id', null: false
+    t.index %w[restaurant_id name], name: 'index_menus_on_restaurant_id_and_name', unique: true
   end
 
   create_table 'restaurants', force: :cascade do |t|
@@ -38,4 +39,5 @@ ActiveRecord::Schema.define(version: 20_220_419_155_129) do
   end
 
   add_foreign_key 'menu_items', 'menus'
+  add_foreign_key 'menus', 'restaurants'
 end
