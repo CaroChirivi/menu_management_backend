@@ -21,7 +21,19 @@ RSpec.describe Menu, type: :model do
   end
 
   describe 'when validate attributes' do
-    let(:another_menu) { build(:menu, name: menu.name) }
+    let(:another_menu) { build(:menu, name: menu.name, restaurant_id: menu.restaurant_id) }
+
+    context '#restaurant' do
+      it 'is required' do
+        menu.restaurant = nil
+        menu.valid?
+        expect(menu.errors[:restaurant].size).to eq(1)
+      end
+
+      it 'is an instance of Restaurant' do
+        expect(menu.restaurant).to be_an Restaurant
+      end
+    end
 
     context '#name' do
       it 'is required' do
@@ -44,7 +56,7 @@ RSpec.describe Menu, type: :model do
   end
 
   describe 'when update an existing menu' do
-    let(:another_menu) { create(:menu, name: Faker::Name.unique.name) }
+    let(:another_menu) { create(:menu, name: Faker::Name.unique.name, restaurant_id: menu.restaurant_id) }
 
     describe 'with valid attributes' do
       it 'should succeeds with no side effects' do
@@ -56,6 +68,14 @@ RSpec.describe Menu, type: :model do
     end
 
     describe 'with invalid attributes' do
+      context '#restaurant' do
+        it 'is empty' do
+          menu.update(restaurant: nil)
+          menu.valid?
+          expect(menu.errors[:restaurant].size).to eq(1)
+        end
+      end
+
       context '#name' do
         it 'return error if is empty' do
           menu.update(name: nil)
@@ -98,6 +118,13 @@ RSpec.describe Menu, type: :model do
       FactoryBot.create(:menu_item, menu: menu)
       FactoryBot.create(:menu_item, menu: menu)
       expect(menu.menu_items.size).to eq(2)
+    end
+  end
+
+  describe 'when belongs to a restaurant' do
+    it 'return the referenced restaurant' do
+      restaurant = Restaurant.find(menu.restaurant_id)
+      expect(restaurant).to be_valid
     end
   end
 end
