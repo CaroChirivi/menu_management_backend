@@ -40,6 +40,12 @@ RSpec.describe MenuItem, type: :model do
         expect(menu_item.errors[:name].size).to eq(1)
       end
 
+      it 'is unique' do
+        another_menu_item = FactoryBot.build(:menu_item, name: menu_item.name, menu_id: menu_item.menu_id)
+        another_menu_item.valid?
+        expect(another_menu_item.errors['name'].size).to eq(1)
+      end
+
       it 'maximum length' do
         menu_item.name = Faker::Lorem.characters(110)
         menu_item.valid?
@@ -117,6 +123,13 @@ RSpec.describe MenuItem, type: :model do
           expect(menu_item.errors[:name].size).to eq(1)
         end
 
+        it 'return error if the name already exists for the specific menu' do
+          another_menu_item = FactoryBot.create(:menu_item, name: Faker::Food.unique.dish, menu_id: menu_item.menu_id)
+          menu_item.update(name: another_menu_item.name)
+          menu_item.valid?
+          expect(menu_item.errors[:name].size).to eq(1)
+        end
+
         it 'exceed maximum length' do
           menu_item.update(name: Faker::Lorem.characters(110))
           menu_item.valid?
@@ -178,6 +191,13 @@ RSpec.describe MenuItem, type: :model do
       id = menu_item.id
       menu_item.destroy
       expect(MenuItem.find_by_id(id)).to be_nil
+    end
+  end
+
+  describe 'when belongs to a menu' do
+    it 'return the referenced menu' do
+      menu = Menu.find(menu_item.menu_id)
+      expect(menu).to be_valid
     end
   end
 end
