@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class MenuItem < ApplicationRecord
-  belongs_to :menu
+  has_many :menu_item_price, dependent: :destroy
 
-  validates :name, presence: true, length: { maximum: 100 }
-  validates :description, presence: true, length: { maximum: 500 }
-  validates :price, presence: true, numericality: { greater_than: 0, less_than: 10_000 }
+  validates :name, presence: true, length: { maximum: 100 }, uniqueness: true
 end
