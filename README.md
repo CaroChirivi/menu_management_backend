@@ -1,7 +1,27 @@
 # Requirements Menu Management Backend
 
 The next levels of requirements are in individual branches, which try to show an iterative approach.
-Please follow brach **level_three_main_approach** which have the right approach. 
+There are two approachs, in different branches path:
+ + branches, _level_one_basics_ => _level_two_multiple_menus_ => _level_three_populate_system_. In this approach I understood
+**MenuItems** name not to be duplicate for each menu, so I develop the next steps with this
+requirement.
+ + branches, _level_one_basics_ => _level_two_main_approach_ => _level_three_main_approach_ Thinking
+in the exact requirement I created a branch in the commit before I started the last approach
+and create a different one that follow in a better way the requirements.
+ 
+##Installation
++ This is a Ruby on Rails project you have to check if can run a Ruby on Rails project in your 
+local machine. Check the official site of RoR in order to run the application. _https://guides.rubyonrails.org/getting_started.html_
+
++ Clone the public repository _https://github.com/CaroChirivi/menu_management_backend.git_
++ Go to the directory where you clone the repository and run _bundle install_
++ The MDBS is the default configure with Ruby on Rails project (_sqlite3_) to generate tables on database
+run the migrations with the command _rake db:migrate_
++ For running the rails server run _rails s_
++ For running the rails console use _rails c_
++ For running all specs in the project directory run _bundle exec rspec --format doc_
++ For running specific spec run _bundle exec rspec --format doc path/to/file_ 
+Specs are located in _spec/models/_ directory.
 
 ## Level 1: Basics
 ### Requirements
@@ -89,6 +109,12 @@ The script follow these approach:
 + Use of **ActiveRecord::Base.transaction** which will ensure rolling back everything when is needed.
 + The script is over verbose for easy identify where an error happen.
 + The script will Roll Back if _dry_run:true_ or if _errors_ array is not empty.
+
+## Running the script
++ Enter to rails console with _rails c_
++ In the rails console load the script with _load "#{Rails.root}/app/scripts/populate_menu/populate_menu_data.rb"_
++ Call the populate method _populate_menu_data()_. Remember this method can receive two parameters, _dry_run_ and _items_identifier_
+which I explained above.
 
 ## Improvement of menu system
 ### Final developer notes
