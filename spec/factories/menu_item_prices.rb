@@ -2,8 +2,9 @@
 
 FactoryBot.define do
   factory :menu_item_price do
-    menu { nil }
-    menu_item { nil }
-    price { 1 }
+    menu        { create(:menu) }
+    menu_item   { create(:menu_item) }
+    price       { Faker::Commerce.price }
+    description { Faker::Food.description }
   end
 end

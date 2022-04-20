@@ -113,11 +113,13 @@ RSpec.describe Menu, type: :model do
     end
   end
 
-  describe 'when have menu_items' do
-    it 'return the referenced menu_items' do
-      FactoryBot.create(:menu_item, menu: menu)
-      FactoryBot.create(:menu_item, menu: menu)
-      expect(menu.menu_items.size).to eq(2)
+  describe 'when have menu_item_prices' do
+    it 'return the referenced menu_item_prices' do
+      menu_item = FactoryBot.create(:menu_item)
+      another_menu_item = FactoryBot.create(:menu_item)
+      FactoryBot.create(:menu_item_price, menu: menu, menu_item: menu_item)
+      FactoryBot.create(:menu_item_price, menu: menu, menu_item: another_menu_item)
+      expect(menu.menu_item_price.size).to eq(2)
     end
   end
 
