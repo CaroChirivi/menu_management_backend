@@ -2,13 +2,13 @@
 
 The next levels of requirements are in individual branches, which try to show an iterative approach.
 
-##Level 1: Basics
-###Requirements
+## Level 1: Basics
+### Requirements
   + Create an object model for **Menu** and **MenuItem** s classes.
   + **Menu** has many **MenuItem** s.
   + **Menu** and **MenuItem** have typical data associated with restaurants.
   + Illustrate behavior via unit tests.
-###Developer notes
+### Developer notes
 #### Initial configuration
 Next gems was added:
   + _gem factory_bot_ for the creation of fixtures.
@@ -32,14 +32,14 @@ allow us have consistent records in the DB. Here name is required, a string with
   It is set up with an association _belongs_to_ to **Menu** model.
   The migration has a _foreing_key_ to **menus** table to assure integrity of data.
 
-##Level 2: Multiple Menus
-###Requirements
+## Level 2: Multiple Menus
+### Requirements
   + Introduce a **Restaurant** model, and allow **Restaurant** s to have multiple **Menu** s.
   + **MenuItem** names should not be duplicated in the database.
   + **MenuItem** can be on multiple **Menu** s of a **Restaurant** .
   + Illustrate behavior via unit tests.
 
-###Developer notes
+### Developer notes
 #### Level approach
   + Model **Restaurant**: is configure with "validates" helper and the migration is defined in order to use some restrictions that
     allow us have consistent records in the DB. Here name is required, a string with length limit of 100 characters and unique.
@@ -53,8 +53,16 @@ The new migration set up the new column as a _foreign_key_, _not null_ with an _
   + Added associations between models **Menu** and **Restaurant** in model and migration files. 
 **Restaurant** can have one or more **Menu** and a **Menu** belongs to a **Restaurant**.
     Modified uniqueness constraint in **Menu** model for only scope of Restaurant, which allow diferents restaurants have same name of menu, but unique for one restaurant.
+  + Model **MenuItemPrice**: a new model an table were created in order to follow requirement "MenuItem names should not be duplicated in the database". In this new table we associate
+a _menu_ and _menu_item_ and a _price_. With this approach we leave the _menu_items_ table whit only a field _name_ (including
+timestamps for all tables) it will assure the uniqueness of the name.
+  + **MenuItem** model is updated with the new approach and validate uniqueness of name. With a migration we remove
+columns not needed and add unique constraint and an index.
+  + Testing **MenuItemPrice**: I updated _menus_ and _menu_items_ factories in order to follow the new approach and new associations.
+Factory and specs were created for new **MenuItemPrice** model. Testing CRUD and associations with **Menu** and **MenuItem**.
 
-* Level 3:
+## Level 3: Populate menu system
+### Requirements
   + Convert the following json body from the included file, **restaurant_data.json** in to
 our new menu system.
   + Make any model/validation changes that you feel are necessary to make the
@@ -64,3 +72,5 @@ result.
   + Apply what you consider to be adequate logging and exception handling.
   + Illustrate behavior via unit tests.
 
+### Developer notes
+#### Level approach
