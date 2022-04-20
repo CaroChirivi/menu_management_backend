@@ -74,3 +74,28 @@ result.
 
 ### Developer notes
 #### Level approach
+To populate the menu system I created a script which is in _app/scripts/populate_menu_ folder, here we can find the json file and the script.
+The script follow these approach:
++ Have a main method for running the script. Method _populate_menu_data_ which receive two paramenters: _dry_run_ and _items_identifier_
+  + _dry_run_ define is is a dry run(dry_run: true) or a real run(dry_run: false). The idea is only run a real one (dry_run: false) in production when everything
+  was checked and tested. By default is set to _true_.
+  + _items_identifier_ allow pass to the script different "identifiers" for "menu_items" by default is set to 
+  _items_identifier: ['menu_items', 'dishes']_ which exists on the json file.
++ Have to arrays _errors = []_ and _successes = []_ as a kind of logging.
+  + _successes_ array will store the id of successfully created restaurant (by success I mean sucessfully  created restaurant, menus and menu_items)
+  + _errors_ array will store the name of restaurant if some exception or error happen during the population
+  of the restaurant, menu or menu_item.
++ Use of **ActiveRecord::Base.transaction** which will ensure rolling back everything when is needed.
++ The script is over verbose for easy identify where an error happen.
++ The script will Roll Back if _dry_run:true_ or if _errors_ array is not empty.
+
+## Improvement of menu system
+### Final developer notes
++ Create other model an table to avoid duplicate names for menu in the database. 
+Similar to _menu_item_prices_ table we can have a _restaurant_menu_ table whith association to
+_restaurants_ and _menus_, this way we can leave _menu names_ as unique in _menus_ table. 
++ Improve script for populate the menu system, for a huge amount of records a good approach
+is to create jobs with a worker, like _sidekiq_ worker, to ensure not consume much resources
+of the machine while the system is populating.
++ In the json file, I can see a menu_item_prices duplicate, the menu system allow this duplicate record,
+since this could happen by a mistake from user or a expected behaviour of the system.
